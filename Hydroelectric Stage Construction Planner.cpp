@@ -1,65 +1,159 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-int main() {
-int choice;
+struct Node {
+    int id, days;
+    string name;
+    Node* next;
+};
 
-cout << "Hydroelectric Stage Construction Planner" << endl;
+Node* head = NULL;
 
-cout << "\n1. Site Selection";
-cout << "\n2. Planning and Design";
-cout << "\n3. Dam Construction";
-cout << "\n4. Water Channel Construction";
-cout << "\n5. Turbine Installation";
-cout << "\n6. Generator Installation";
-cout << "\n7. Testing";
-cout << "\n8. Display All Stages";
-cout << "\nEnter your choice: ";
-cin >> choice;
+void addStage() {
+    Node* n = new Node;
 
-switch (choice) {
-    case 1:
-        cout << "Site Selection: Select a suitable location.";
-        break;
+    cout << "Enter Stage ID: ";
+    cin >> n->id;
 
-    case 2:
-        cout << "Planning and Design: Prepare the construction plan.";
-        break;
+    cout << "Enter Stage Name: ";
+    cin >> ws;
+    getline(cin, n->name);
 
-    case 3:
-        cout << "Dam Construction: Build a dam to store water.";
-        break;
+    cout << "Enter Days Required: ";
+    cin >> n->days;
 
-    case 4:
-        cout << "Water Channel Construction: Build a channel to carry water.";
-        break;
+    n->next = NULL;
 
-    case 5:
-        cout << "Turbine Installation: Install the turbine.";
-        break;
+    if (head == NULL) {
+        head = n;
+    } else {
+        Node* t = head;
 
-    case 6:
-        cout << "Generator Installation: Install the generator to produce electricity.";
-        break;
+        while (t->next != NULL)
+            t = t->next;
 
-    case 7:
-        cout << "Testing: Test the system to check its operation.";
-        break;
+        t->next = n;
+    }
 
-    case 8:
-        cout << "\n1. Site Selection";
-        cout << "\n2. Planning and Design";
-        cout << "\n3. Dam Construction";
-        cout << "\n4. Water Channel Construction";
-        cout << "\n5. Turbine Installation";
-        cout << "\n6. Generator Installation";
-        cout << "\n7. Testing";
-        break;
-
-    default:
-        cout << "Invalid choice!";
+    cout << "Stage added successfully!\n";
 }
 
-return 0;
+void displayStages() {
+    if (head == NULL) {
+        cout << "No construction stages available!\n";
+        return;
+    }
 
+    Node* t = head;
+    int total = 0;
+
+    cout << "\n--- Construction Plan ---\n";
+
+    while (t != NULL) {
+        cout << "Stage ID: " << t->id << endl;
+        cout << "Stage Name: " << t->name << endl;
+        cout << "Days Required: " << t->days << endl;
+        cout << "------------------------\n";
+
+        total += t->days;
+        t = t->next;
+    }
+
+    cout << "Total Construction Days: " << total << endl;
+}
+
+void searchStage() {
+    int id;
+
+    cout << "Enter Stage ID to search: ";
+    cin >> id;
+
+    Node* t = head;
+
+    while (t != NULL) {
+        if (t->id == id) {
+            cout << "Stage Found!\n";
+            cout << "Stage Name: " << t->name << endl;
+            cout << "Days Required: " << t->days << endl;
+            return;
+        }
+
+        t = t->next;
+    }
+
+    cout << "Stage not found!\n";
+}
+
+void deleteStage() {
+    int id;
+
+    cout << "Enter Stage ID to delete: ";
+    cin >> id;
+
+    Node* t = head;
+    Node* prev = NULL;
+
+    while (t != NULL && t->id != id) {
+        prev = t;
+        t = t->next;
+    }
+
+    if (t == NULL) {
+        cout << "Stage not found!\n";
+        return;
+    }
+
+    if (prev == NULL)
+        head = t->next;
+    else
+        prev->next = t->next;
+
+    delete t;
+
+    cout << "Stage deleted successfully!\n";
+}
+
+int main() {
+    int choice;
+
+    do {
+        cout << "\n===== HYDROELECTRIC STAGE CONSTRUCTION PLANNER =====\n";
+        cout << "1. Add Construction Stage\n";
+        cout << "2. Display Construction Plan\n";
+        cout << "3. Search Construction Stage\n";
+        cout << "4. Delete Construction Stage\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addStage();
+                break;
+
+            case 2:
+                displayStages();
+                break;
+
+            case 3:
+                searchStage();
+                break;
+
+            case 4:
+                deleteStage();
+                break;
+
+            case 5:
+                cout << "Thank you for using the planner!\n";
+                break;
+
+            default:
+                cout << "Invalid choice! Try again.\n";
+        }
+
+    } while (choice != 5);
+
+    return 0;
 }
